@@ -1,15 +1,17 @@
-Terraform AWS IAM Groups Module
+# Terraform AWS IAM Groups Module
 This Terraform module helps you create and manage AWS IAM groups, users, and permissions. You can use this module to define groups, assign users, and manage permissions through both AWS Managed Policies and inline policies.
 
-Features
-Create IAM groups and users.
-Assign users to specific groups.
-Attach multiple AWS Managed Policies to each group.
-Define custom inline policies for each group.
-Usage
-Module Configuration Example
-hcl
-Copiar código
+## Features
+- Create IAM groups and users.
+- Assign users to specific groups.
+- Attach multiple AWS Managed Policies to each group.
+- Define custom inline policies for each group.
+
+### Usage
+
+Example
+
+```
 module "iam_groups" {
   source = "./modules/iam_group"
 
@@ -52,35 +54,55 @@ module "iam_groups" {
     }
   }
 }
-Variables
-Name	Type	Description	Default
-group_names	list(string)	List of IAM group names.	N/A
-group_users	map(list(string))	Mapping of group names to lists of user names.	N/A
-managed_policies	map(list(string))	Map of group names to lists of AWS Managed Policy ARNs.	{}
-inline_policies	map(map(any))	Map of group names to custom inline policy definitions.	{}
-Outputs
-Name	Description
-group_arns	List of ARNs for the created IAM groups.
-user_names	List of IAM user names that were created or managed.
-group_policies	Managed and inline policies associated with the groups.
-How to Import Existing Users or Groups
+```
+## How to Import Existing Users or Groups
 If you have existing IAM users or groups, you can import them to manage with Terraform.
 
 Import Existing User:
 
-bash
-Copiar código
+```
 terraform import module.iam_groups.aws_iam_user.user["alice"] alice
+```
+
 Import Existing Group:
 
-bash
-Copiar código
+```
 terraform import module.iam_groups.aws_iam_group.group["cs"] cs
-Example of Applying the Module
-Create main.tf with your configuration:
+```
 
-hcl
-Copiar código
+## Requirements         
+
+| Name  | Version |
+| ------------- | ------------- |
+| terraform  | >= 0.12 |
+| aws	 | >= 3.0 |
+
+## Providers
+
+| Name  | Version |
+| ------------- | ------------- |
+| aws	 | >= 3.0 |
+
+## Inputs
+
+| Name  | Description             | Type        | Default | Required |
+| ---- | ------------------------ | ----------- | ------- | -------- |
+| `group_names`	 | List of IAM group names. | list(string) | N/A    | yes      |
+| `group_users`	 | Mapping of group names to lists of user names. | 	map(list(string)) | `{}`    | yes      |
+| `managed_polices`	 | Map of group names to list of managed policy ARNs. | 	map(list(string)) | `{}`    | no      |
+| `inlines_polices`	 | Map of group names to custom inline policy definitions. | map(map(any)) | `{}`    | no      |
+
+## Outputs
+
+| Name  | Description  |
+| ------------- | ------------- |
+| group_arns	 | List of ARNs for the created IAM groups.|
+| user_names | List of IAM user names that were created or managed.|
+| group_policies	 | 	Managed and inline policies associated with the groups.|
+
+# Example of Applying the Module
+### 1 .Create `main.tf` with your configuration:
+```
 module "iam_groups" {
   source = "./modules/iam_group"
 
@@ -112,25 +134,24 @@ module "iam_groups" {
     }
   }
 }
-Run Terraform Commands:
+```
 
-bash
-Copiar código
+### 2. Run Terraform Commands:
+```
 terraform init
 terraform plan
 terraform apply
-Requirements
-Terraform version >= 0.12
-AWS Provider configuration
-Provider Configuration
+```
+
+## Provider Configuration
 Make sure to have your AWS provider configured:
 
-hcl
-Copiar código
+```
 provider "aws" {
-  region = "us-west-2"
+  region  = "us-west-2"
   profile = "default"
 }
-Notes
-Ensure that your AWS credentials are properly set up and have the necessary permissions to create IAM resources.
-Be cautious when managing IAM resources, as incorrect permissions can impact your infrastructure security.
+```
+## Notes
+- Ensure that your AWS credentials are properly set up and have the necessary permissions to create IAM resources.
+- Be cautious when managing IAM resources, as incorrect permissions can impact your infrastructure security.
